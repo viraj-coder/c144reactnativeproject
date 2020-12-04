@@ -9,7 +9,7 @@ export default class Home extends React.Component{
     const url="http://127.0.0.1/5000/get-movie"//use api from ngork
     axios.get(url).then(responce=>{let details=responce.data.data
     details["duration"]=this.timeconvert(details.duration)
-    this.setState({moviedetails:details})
+    this.setState({articledetails:details})
           })
     .catch(error=>{console.log(error.message)})
     }
