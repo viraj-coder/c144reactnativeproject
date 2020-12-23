@@ -1,1 +1,2 @@
-# c144reactnativeproject
+# Blog-App-Stage-2
+Blog app project
