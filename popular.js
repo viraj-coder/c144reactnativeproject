@@ -1,57 +1,70 @@
-import React from "react"
-import {Text,View,TouchableOpacity,Image} from react-native
-import {Card} from 'react-native-elements'
-import axios from 'axios'
-import {RFValue} from 'react-native-responsive-fontsize'
+import React, { Component } from "react";
+import { View, StyleSheet, FlatList, Text } from "react-native";
+import { Card, Icon } from "react-native-elements";
+import axios from "axios";
+import { RFValue } from "react-native-responsive-fontsize";
 
-export default class PopularArticleScreen extends React.Component{
-    constructor(){
-        super()
-        this.state={data:[]}
-    }  
-    componentDidMount(){
-        this.getdata()
-    }
-    timeconvert(num){
-        var hours=Math.float(num/60)
-        var minutes=num%60
-        return `${hours} hrs ${minutes} mins`
-    }
-    getdata=()=>{
-        const url='http://localhost:5000/popular-articles'
-        axios
-        .get(url)
-        .then(async response=>{
-            this.setState({data:response.data.data})
-        })
-        .catch(error=>{console.log(error.message)})
+export default class PopularScreen extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: []
+    };
+  }
 
-    }
-    keyExtractor=(item,index)=>index.toString()
-    renderItems=({item,index})=>{
-        return (
-            <Card
-              key={`card-${index}`}
-              image={{ uri: item.poster_link }}
-              imageProps={{ resizeMode: "cover" }}
-              featuredTitle={item.title}
-              featuredSubtitle={`${
-                item.release_date.split("-")[0]
-              } | ${this.timeConvert(item.duration)}`}
-            ></Card>
-          );
-        };
-      
-        render() {
-          const { data } = this.state;
-          return (
-            <View >
-              <FlatList
-                data={data}
-                keyExtractor={this.keyExtractor}
-                renderItem={this.renderItems}
-              />
-            </View>
-          );
-    }
+  componentDidMount() {
+    this.getData();
+  }
+
+  getData = () => {
+    const url = "http://localhost:5000/popular-articles";
+    axios
+      .get(url)
+      .then(async response => {
+        this.setState({ data: response.data.data });
+      })
+      .catch(error => {
+        console.log(error.message);
+      });
+  };
+
+  keyExtractor = (item, index) => index.toString();
+
+  renderItems = ({ item, index }) => {
+    console.log(item);
+    return (
+      <Card
+        key={`card-${index}`}
+        title={item.title}
+        containerStyle={[
+          styles.cardContainer,
+          {
+            backgroundColor: `rgb(${Math.floor(Math.random() * 56) +
+              200}, ${Math.floor(Math.random() * 56) + 200},${Math.floor(
+              Math.random() * 56
+            ) + 200})`
+          }
+        ]}
+      >
+        <View >
+          <Icon type={"antdesign"} name={"heart"} size={RFValue(20)} />
+          <Text style={{ fontSize:18 }}>{item.total_events}</Text>
+        </View>
+      </Card>
+    );
+  };
+
+  render() {
+    const { data } = this.state;
+    return (
+      <View>
+        <FlatList
+          data={data}
+          keyExtractor={this.keyExtractor}
+          renderItem={this.renderItems}
+        />
+      </View>
+    );
+  }
 }
+
